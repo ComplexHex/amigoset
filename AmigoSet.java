@@ -18,12 +18,6 @@ public class AmigoSet<E> extends AbstractSet<E> implements Serializable, Cloneab
 
         this.map = new HashMap<>(Math.max((int) (collection.size() / .75f) + 1, 16));
         addAll(collection);
-
-    }
-
-    @Override
-    public Iterator<E> iterator() {
-        return null;
     }
 
     @Override
@@ -52,8 +46,35 @@ public class AmigoSet<E> extends AbstractSet<E> implements Serializable, Cloneab
     }
 
     @Override
+    public boolean isEmpty() {
+        return map.isEmpty();
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        return super.contains(o);
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        return super.remove(o);
+    }
+
+    @Override
+    public void clear() {
+        map.clear();
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        Iterator<E> iterator = map.keySet().iterator();
+
+        return iterator;
+    }
+
+    @Override
     public int size() {
-        return 0;
+        return map.size();
     }
 
     public boolean add(E e) {
