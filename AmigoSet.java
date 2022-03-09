@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class AmigoSet<E> extends AbstractSet<E> implements Serializable, Cloneable, Set<E> {
+public class AmigoSet<E> extends AbstractSet<E> implements Set<E>, Cloneable, Serializable {
     private static final Object PRESENT = new Object();
     private transient HashMap<E, Object> map;
 
@@ -15,34 +15,22 @@ public class AmigoSet<E> extends AbstractSet<E> implements Serializable, Cloneab
     }
 
     public AmigoSet(Collection<? extends E> collection) {
-
         this.map = new HashMap<>(Math.max((int) (collection.size() / .75f) + 1, 16));
         addAll(collection);
     }
 
-    @Override
-    public void forEach(Consumer<? super E> action) {
-        super.forEach(action);
+    public boolean add(E e) {
+        return map.put(e, PRESENT) == null;
     }
 
     @Override
-    public boolean removeIf(Predicate<? super E> filter) {
-        return super.removeIf(filter);
+    public Iterator<E> iterator() {
+        return map.keySet().iterator();
     }
 
     @Override
-    public Spliterator<E> spliterator() {
-        return Set.super.spliterator();
-    }
-
-    @Override
-    public Stream<E> stream() {
-        return super.stream();
-    }
-
-    @Override
-    public Stream<E> parallelStream() {
-        return super.parallelStream();
+    public int size() {
+        return map.size();
     }
 
     @Override
@@ -52,12 +40,7 @@ public class AmigoSet<E> extends AbstractSet<E> implements Serializable, Cloneab
 
     @Override
     public boolean contains(Object o) {
-        return super.contains(o);
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        return super.remove(o);
+        return map.containsKey(o);
     }
 
     @Override
@@ -66,20 +49,18 @@ public class AmigoSet<E> extends AbstractSet<E> implements Serializable, Cloneab
     }
 
     @Override
-    public Iterator<E> iterator() {
-        Iterator<E> iterator = map.keySet().iterator();
-
-        return iterator;
+    public boolean remove(Object o) {
+        return map.remove(o) == PRESENT;
     }
 
     @Override
-    public int size() {
-        return map.size();
+    public Object clone() {
+        try {
+            AmigoSet<E> newSet = (AmigoSet<E>) super.clone();
+            newSet.map = (HashMap<E, Object>) map.clone();
+            return newSet;
+        } catch (Exception e) {
+            throw new InternalError();
+        }
     }
-
-    public boolean add(E e) {
-        return map.put(e, PRESENT) == null;
-    }
-
-
 }
